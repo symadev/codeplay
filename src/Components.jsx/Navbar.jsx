@@ -1,12 +1,12 @@
-
-
-import  { useState } from 'react';
+import { useState } from 'react';
+import Login from './Login'; // Adjust path if needed
 
 const Navbar = () => {
   const [isHovered, setIsHovered] = useState({ login: false, start: false });
+  const [showLoginModal, setShowLoginModal] = useState(false); // modal toggle
 
   const handleLogin = () => {
-    console.log('Login clicked');
+    setShowLoginModal(true); // open modal
   };
 
   const handleStartPlaying = () => {
@@ -14,10 +14,10 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="relative  bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-700   overflow-hidden">
+    <nav className="relative bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-700 overflow-hidden">
       {/* Animated shine effect */}
       <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent animate-pulse"></div>
-      
+
       <div className="relative z-10 flex items-center justify-between px-4 md:px-8 py-4">
         {/* Logo */}
         <div className="flex items-center space-x-2">
@@ -76,6 +76,9 @@ const Navbar = () => {
           </button>
         </div>
       </div>
+
+      {/* 🔐 Login Modal */}
+      <Login isOpen={showLoginModal} onRequestClose={() => setShowLoginModal(false)} />
     </nav>
   );
 };
