@@ -1,4 +1,4 @@
-// LoginModal.jsx
+
 import Modal from "react-modal";
 import { useContext } from "react";
 import { useNavigate, useLocation, Link } from "react-router-dom";
@@ -8,7 +8,8 @@ import { AuthContext } from "../Provider/AuthContext";
 // Required by react-modal
 Modal.setAppElement("#root");
 
-const Login = ({ isOpen, onRequestClose }) => {
+const Login = ({ isOpen, onRequestClose, openRegister }) => {
+   
   const { signIn } = useContext(AuthContext);
   const navigate = useNavigate();
   const location = useLocation();
@@ -106,20 +107,28 @@ const Login = ({ isOpen, onRequestClose }) => {
         </button>
       </form>
 
-      <div className="flex justify-between mt-6 text-sm text-indigo-200 relative z-10">
-        <Link 
-          to="/forgot-password" 
-          className="hover:text-blue-400 transition-colors duration-300 hover:underline"
-        >
-          Forgot Password?
-        </Link>
-        <Link 
-          to="/register" 
-          className="hover:text-blue-400 transition-colors duration-300 hover:underline"
-        >
-          Sign Up
-        </Link>
-      </div>
+    <div className="flex flex-col sm:flex-row justify-between items-center mt-6 text-sm text-gray-400 gap-3 relative z-10">
+  {/* Forgot Password Link */}
+  <Link
+    to="/forgot-password"
+    className="hover:text-orange-400 transition-colors duration-300 hover:underline"
+  >
+    Forgot Password?
+  </Link>
+
+  {/* Sign Up Button to Open Modal */}
+  <button
+    type="button"
+    onClick={() => {
+      onRequestClose(); // close login modal
+      openRegister();   // open register modal
+    }}
+    className="hover:text-orange-400 transition-colors duration-300 hover:underline"
+  >
+    Sign Up
+  </button>
+</div>
+
 
       {/* Bottom decorative line */}
       <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-indigo-400 to-transparent"></div>

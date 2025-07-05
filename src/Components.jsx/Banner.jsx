@@ -112,7 +112,7 @@ const Banner = () => {
                         </div>
 
                         {/* Chat bubble */}
-                        <div className="absolute top-16 right-8 bg-white rounded-2xl p-4 shadow-lg max-w-xs transform rotate-3">
+                        <div className="absolute top-16 right-4 bg-white rounded-2xl p-4 shadow-lg max-w-xs transform rotate-3">
                             <div className="text-sm text-gray-700 mb-2">
                                 The robot wants to jump 5 times to reach the goal. Which loop should it use?
                             </div>

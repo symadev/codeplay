@@ -1,13 +1,28 @@
 import { useState } from 'react';
-import Login from './Login'; // Adjust path if needed
+import Login from './Login';     // Adjust path if needed
+import SignUp from './SignUp';   // Import SignUp component (adjust path)
 
 const Navbar = () => {
+  // Hover states for buttons
   const [isHovered, setIsHovered] = useState({ login: false, start: false });
-  const [showLoginModal, setShowLoginModal] = useState(false); // modal toggle
 
-  const handleLogin = () => {
-    setShowLoginModal(true); // open modal
+  // Modal visibility states
+  const [showLoginModal, setShowLoginModal] = useState(false);
+  const [showRegisterModal, setShowRegisterModal] = useState(false);
+
+  // Functions to open/close modals
+  const openLogin = () => {
+    setShowRegisterModal(false);
+    setShowLoginModal(true);
   };
+
+  const openRegister = () => {
+    setShowLoginModal(false);
+    setShowRegisterModal(true);
+  };
+
+  const closeLogin = () => setShowLoginModal(false);
+  const closeRegister = () => setShowRegisterModal(false);
 
   const handleStartPlaying = () => {
     console.log('Start Playing clicked');
@@ -31,7 +46,7 @@ const Navbar = () => {
         <div className="flex items-center space-x-3 md:space-x-4">
           {/* Login Button */}
           <button
-            onClick={handleLogin}
+            onClick={openLogin}
             onMouseEnter={() => setIsHovered({ ...isHovered, login: true })}
             onMouseLeave={() => setIsHovered({ ...isHovered, login: false })}
             className={`
@@ -77,8 +92,19 @@ const Navbar = () => {
         </div>
       </div>
 
-      {/* 🔐 Login Modal */}
-      <Login isOpen={showLoginModal} onRequestClose={() => setShowLoginModal(false)} />
+      {/* Login Modal */}
+      <Login
+        isOpen={showLoginModal}
+        onRequestClose={closeLogin}
+        openRegister={openRegister} // So Login modal can open Register modal
+      />
+
+      {/* Register Modal */}
+      <SignUp
+        isOpen={showRegisterModal}
+        onRequestClose={closeRegister}
+        openLogin={openLogin} // So Register modal can open Login modal
+      />
     </nav>
   );
 };
