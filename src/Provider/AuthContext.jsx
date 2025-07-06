@@ -9,6 +9,7 @@ import {
   GoogleAuthProvider,
 } from "firebase/auth";
 import { app } from "./FireBase/Firebase";
+import UseAxiosPublic from "./UseAxiosPublic";
 
 
 
@@ -20,6 +21,8 @@ const AuthProvider = ({ children }) => {
   const googleProvider = new GoogleAuthProvider();
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+   const axiosPublic = UseAxiosPublic()
+
   
 
   const createUser = (email, password) => {
@@ -49,20 +52,20 @@ const AuthProvider = ({ children }) => {
       setUser(currentUser);
       setLoading(false);
 
-    //   if (currentUser) {
-    //    const userINfo = {email:currentUser.email}
-    //   axiosPublic.post('/jwt',userINfo)
-    //     .then (res=>{
-    //       if(res.data.token){
-    //         localStorage.setItem('access-token', res.data.token)
-    //         //needed two arguments
-    //       }
-    //       else {
-    //         //do something:remove token (if the token store in the client sight(like,localstorage,chasing,memory))
-    //         localStorage.removeItem('access-token')
-    //       }
-    //     })
-    //   }
+      if (currentUser) {
+       const userINfo = {email:currentUser.email}
+      axiosPublic.post('/jwt',userINfo)
+        .then (res=>{
+          if(res.data.token){
+            localStorage.setItem('access-token', res.data.token)
+            //needed two arguments
+          }
+          else {
+            //do something:remove token (if the token store in the client sight(like,localstorage,chasing,memory))
+            localStorage.removeItem('access-token')
+          }
+        })
+      }
     });
 
     return () => unsubscribe();

@@ -1,10 +1,10 @@
 import Modal from "react-modal";
-import { FaFacebookF, FaGoogle, FaGithub } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { useContext } from "react";
 import { AuthContext } from "../Provider/AuthContext";
-// import { toast } from "react-toastify";
+import UseAxiosPublic from "../Provider/UseAxiosPublic";
+import { toast } from "react-toastify";
 
 Modal.setAppElement("#root");
 
@@ -12,6 +12,7 @@ const SignUp = ({ isOpen, onRequestClose, openLogin }) => {
   const { register, handleSubmit, reset, formState: { errors } } = useForm();
   const { createUser } = useContext(AuthContext);
   const navigate = useNavigate();
+  const axiosPublic = UseAxiosPublic();
 
   const onSubmit = (data) => {
     createUser(data.email, data.password)
@@ -22,7 +23,22 @@ const SignUp = ({ isOpen, onRequestClose, openLogin }) => {
           role: 'user',
           createdAt: new Date(),
         };
-        // Handle success
+
+        axiosPublic.post('/users', newUser)
+          .then(res => {
+            if (res.data.insertedId) {
+              toast.success("SignUp Done!");
+              reset();
+              onRequestClose();      // ✅ close modal
+              navigate('/');         // ✅ redirect to homepage
+            }
+          })
+          .catch(() => {
+            toast.error('Failed to save user data');
+          });
+      })
+      .catch(() => {
+        toast.error('Something went wrong during SignUp');
       });
   };
 
@@ -41,10 +57,6 @@ const SignUp = ({ isOpen, onRequestClose, openLogin }) => {
         &times;
       </button>
 
-      {/* Decorative Elements */}
-      <div className="absolute -top-2 -right-2 w-20 h-20 bg-gradient-to-br from-blue-400/20 to-indigo-600/20 rounded-full blur-xl"></div>
-      <div className="absolute -bottom-4 -left-4 w-16 h-16 bg-gradient-to-br from-indigo-400/20 to-blue-600/20 rounded-full blur-lg"></div>
-
       {/* Header */}
       <div className="text-center mb-6 relative z-10">
         <div className="inline-block p-3 rounded-full bg-gradient-to-r from-blue-500 to-indigo-600 mb-3">
@@ -53,60 +65,51 @@ const SignUp = ({ isOpen, onRequestClose, openLogin }) => {
           </svg>
         </div>
         <h2 className="text-3xl font-extrabold bg-gradient-to-r from-blue-400 via-indigo-400 to-purple-400 bg-clip-text text-transparent">
-         CodePlay SignUp
+          CodePlay SignUp
         </h2>
         <p className="text-indigo-200 text-sm mt-1">
-         Play the game with codePlay
+          Play the game with CodePlay
         </p>
       </div>
 
       {/* Form */}
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 relative z-10">
         {/* Name */}
-        <div className="relative">
+        <div>
           <label className="block text-sm text-indigo-200 mb-2 font-medium">Name</label>
-          <div className="relative">
-            <input
-              type="text"
-              {...register("name", { required: "Name is required" })}
-              placeholder="John Doe"
-              className="w-full px-4 py-3 bg-slate-800/50 border border-indigo-500/30 rounded-xl placeholder-indigo-300/50 focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:border-transparent transition-all duration-300 backdrop-blur-sm"
-            />
-            <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-blue-500/10 to-indigo-500/10 pointer-events-none"></div>
-          </div>
+          <input
+            type="text"
+            {...register("name", { required: "Name is required" })}
+            placeholder="John Doe"
+            className="w-full px-4 py-3 bg-slate-800/50 border border-indigo-500/30 rounded-xl placeholder-indigo-300/50 focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:border-transparent transition-all duration-300 backdrop-blur-sm"
+          />
           {errors.name && <p className="text-blue-400 text-sm mt-1">{errors.name.message}</p>}
         </div>
 
         {/* Email */}
-        <div className="relative">
+        <div>
           <label className="block text-sm text-indigo-200 mb-2 font-medium">Email</label>
-          <div className="relative">
-            <input
-              type="email"
-              {...register("email", { required: "Email is required" })}
-              placeholder="you@example.com"
-              className="w-full px-4 py-3 bg-slate-800/50 border border-indigo-500/30 rounded-xl placeholder-indigo-300/50 focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:border-transparent transition-all duration-300 backdrop-blur-sm"
-            />
-            <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-blue-500/10 to-indigo-500/10 pointer-events-none"></div>
-          </div>
+          <input
+            type="email"
+            {...register("email", { required: "Email is required" })}
+            placeholder="you@example.com"
+            className="w-full px-4 py-3 bg-slate-800/50 border border-indigo-500/30 rounded-xl placeholder-indigo-300/50 focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:border-transparent transition-all duration-300 backdrop-blur-sm"
+          />
           {errors.email && <p className="text-blue-400 text-sm mt-1">{errors.email.message}</p>}
         </div>
 
         {/* Password */}
-        <div className="relative">
+        <div>
           <label className="block text-sm text-indigo-200 mb-2 font-medium">Password</label>
-          <div className="relative">
-            <input
-              type="password"
-              {...register("password", {
-                required: "Password is required",
-                minLength: { value: 6, message: "Password must be at least 6 characters" },
-              })}
-              placeholder="••••••••"
-              className="w-full px-4 py-3 bg-slate-800/50 border border-indigo-500/30 rounded-xl placeholder-indigo-300/50 focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:border-transparent transition-all duration-300 backdrop-blur-sm"
-            />
-            <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-blue-500/10 to-indigo-500/10 pointer-events-none"></div>
-          </div>
+          <input
+            type="password"
+            {...register("password", {
+              required: "Password is required",
+              minLength: { value: 6, message: "Password must be at least 6 characters" },
+            })}
+            placeholder="••••••••"
+            className="w-full px-4 py-3 bg-slate-800/50 border border-indigo-500/30 rounded-xl placeholder-indigo-300/50 focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:border-transparent transition-all duration-300 backdrop-blur-sm"
+          />
           {errors.password && <p className="text-blue-400 text-sm mt-1">{errors.password.message}</p>}
         </div>
 
@@ -130,8 +133,8 @@ const SignUp = ({ isOpen, onRequestClose, openLogin }) => {
         <button
           type="button"
           onClick={() => {
-            onRequestClose();  // close register modal
-            openLogin();       // open login modal
+            onRequestClose();
+            openLogin();
           }}
           className="ml-1 underline text-blue-400 hover:text-blue-300 transition-colors duration-300"
         >
@@ -139,7 +142,7 @@ const SignUp = ({ isOpen, onRequestClose, openLogin }) => {
         </button>
       </p>
 
-      {/* Bottom decorative line */}
+      {/* Bottom line */}
       <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-indigo-400 to-transparent"></div>
     </Modal>
   );
