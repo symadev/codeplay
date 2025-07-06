@@ -109,19 +109,31 @@ const Banner = () => {
                         </div>
 
                         <div className="absolute bottom-12 -left-12 bg-gradient-to-r from-pink-400 to-purple-500 text-white px-6 py-3 rounded-2xl font-bold shadow-lg animate-pulse delay-500 transform -rotate-6">
-                            Loop 3x
+                            Move Backward
                         </div>
 
-                        {/* Chat bubble */}
-                        <div className="absolute top-16 right-4 bg-white rounded-2xl p-4 shadow-lg max-w-xs transform rotate-3">
-                            <div className="text-sm text-gray-700 mb-2">
-                                The robot wants to jump 5 times to reach the goal. Which loop should it use?
-                            </div>
-                            <div className="flex items-center gap-2 text-xs text-gray-500">
-                                <div className="w-6 h-6 bg-gray-300 rounded-full"></div>
-                                <span>AI Helper</span>
-                            </div>
-                        </div>
+                      {/* Chat bubble */}
+<div className="absolute top-16 right-4 animate-bounce">
+    <div className="relative bg-white rounded-xl p-3 shadow-lg max-w-[240px] border border-gray-100 transform hover:scale-105 transition-transform duration-200">
+        {/* Bubble tail */}
+        <div className="absolute bottom-[-6px] right-10 w-0 h-0 border-l-[8px] border-r-[8px] border-t-[8px] border-l-transparent border-r-transparent border-t-white"></div>
+        
+        {/* Content */}
+        <div className="text-xs text-gray-700 mb-2 leading-relaxed">
+            The robot wants to jump 5 times to reach the goal. Which loop should it use?
+        </div>
+        
+        {/* AI Helper Info */}
+        <div className="flex items-center gap-2 text-xs text-gray-500">
+            <div className="w-4 h-4 bg-gradient-to-r from-blue-400 to-purple-500 rounded-full flex items-center justify-center">
+                <svg className="w-2 h-2 text-white" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+            </div>
+            <span className="font-medium">AI Helper</span>
+        </div>
+    </div>
+</div>
                     </div>
                 </div>
             </div>
