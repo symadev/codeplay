@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 
 
 const Banner = () => {
@@ -36,9 +37,9 @@ const Banner = () => {
                         </div>
 
                         <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-                            <button className="bg-gradient-to-r from-cyan-400 to-blue-500 hover:from-cyan-500 hover:to-blue-600 text-white px-8 py-4 rounded-full font-bold text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300">
+                            <Link to='/game' className="bg-gradient-to-r from-cyan-400 to-blue-500 hover:from-cyan-500 hover:to-blue-600 text-white px-8 py-4 rounded-full font-bold text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300">
                                 🚀 Start Playing
-                            </button>
+                            </Link>
                             <button className="bg-white/10 backdrop-blur-sm hover:bg-white/20 text-white px-8 py-4 rounded-full font-bold text-lg border border-white/20 hover:border-white/40 transition-all duration-300">
                                 🔍 Learn More
                             </button>
