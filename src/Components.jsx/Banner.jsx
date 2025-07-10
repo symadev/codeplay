@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
-
+import robot from "../assets/images/robot.png"
+import board from "../assets/images/board-2.png"
 
 const Banner = () => {
     return (
@@ -57,7 +58,7 @@ const Banner = () => {
 
                                 {/* Main board image */}
                                 <img
-                                    src="/src/assets/images/board-2.png"
+                                    src={board}
                                     alt="Game Board"
                                     className="relative z-10 w-100 h-100 object-cover "
                                 />
@@ -70,7 +71,7 @@ const Banner = () => {
 
                                         {/* Robot image */}
                                         <img
-                                            src="/src/assets/images/robot.png"
+                                            src={ robot }
                                             alt="Robot Character"
                                             className="relative z-10 w-36 h-36 object-contain animate-bounce drop-shadow-2xl"
                                         />

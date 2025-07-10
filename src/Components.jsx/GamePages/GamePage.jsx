@@ -13,63 +13,71 @@ const GamePage = () => {
   const [commands, setCommands] = useState([]);
   const [robotPosition, setRobotPosition] = useState({ x: 0, y: 0 });
   const [showQuiz, setShowQuiz] = useState(false);
-
+  const [quizData, setQuizData] = useState(null);
 
   const axiosPublic = UseAxiosPublic();
-  const [quizData, setQuizData] = useState(null);
- 
-
-const fetchQuiz = async () => {
-  try {
-    const res = await axiosPublic.get("/quiz");
-    console.log("Quiz received:", res.data);
-    setQuizData(res.data);
-    setShowQuiz(true);
-  } catch (error) {
-    console.error("Quiz fetch failed:", error);
-  }
-};
-
   const goalPosition = { x: 4, y: 4 };
-  
 
+  // 🔊 Sound Play Function
+  const playSound = (path) => {
+    const audio = new Audio(path);
+    audio.currentTime = 0;
+    audio.play();
+  };
+
+  // 📥 Load quiz before reaching goal
+  const fetchQuiz = async () => {
+    try {
+      const res = await axiosPublic.get("/quiz");
+      console.log("Quiz received:", res.data);
+      setQuizData(res.data);
+      setShowQuiz(true);
+    } catch (error) {
+      console.error("Quiz fetch failed:", error);
+    }
+  };
+
+  // ▶️ Run robot based on commands
   const runCommands = async () => {
     let pos = { ...robotPosition };
 
-  for (let i = 0; i < commands.length; i++) {
-  const cmd = commands[i];
+    for (let i = 0; i < commands.length; i++) {
+      const cmd = commands[i];
 
-  if (cmd === "move" && pos.y < 4) pos.y += 1;
-  else if (cmd === "left" && pos.x > 0) pos.x -= 1;
-  else if (cmd === "right" && pos.x < 4) pos.x += 1;
-  else if (cmd === "move Back" && pos.y > 0) pos.y -= 1;
+      if (cmd === "move" && pos.y < 4) pos.y += 1;
+      else if (cmd === "left" && pos.x > 0) pos.x -= 1;
+      else if (cmd === "right" && pos.x < 4) pos.x += 1;
+      else if (cmd === "move Back" && pos.y > 0) pos.y -= 1;
 
-  //  CHECK before updating UI
-  if (pos.x === goalPosition.x && pos.y === goalPosition.y - 1) {
-    await fetchQuiz(); // modal show before reaching goal
-    break;
-  }
+      // 🔊 Play move sound
+      playSound("/public/audios/move.mp3");
 
-  //  Now apply the new position
-  setRobotPosition({ ...pos });
+      // 🧠 Show quiz before goal
+      if (pos.x === goalPosition.x && pos.y === goalPosition.y - 1) {
+        await fetchQuiz();
+        break;
+      }
 
-  await new Promise((resolve) => setTimeout(resolve, 500));
-}
+      // Update robot position
+      setRobotPosition({ ...pos });
 
+      await new Promise((resolve) => setTimeout(resolve, 500));
+    }
   };
 
-
-
+  // 🔁 Reset all commands and robot
   const clearCommands = () => {
-  setCommands([]);
-  setRobotPosition({ x: 0, y: 0 }); // রোবটকে আবার শুরুতে
-  setShowQuiz(false);
-};
+    setCommands([]);
+    setRobotPosition({ x: 0, y: 0 });
+    setShowQuiz(false);
+    playSound("/public/audios/clear all.mp3");
+  };
 
-
+  // ✅ Answered quiz correctly
   const handleQuizCorrect = () => {
     setShowQuiz(false);
-    setRobotPosition(goalPosition); // move to goal
+    setRobotPosition(goalPosition);
+    playSound("/public/audios/success.mp3");
   };
 
   return (
@@ -86,34 +94,32 @@ const fetchQuiz = async () => {
         </div>
 
         <div className="flex justify-center gap-4">
-  <button
-    onClick={runCommands}
-    className="bg-blue-600 hover:bg-blue-700 px-6 py-2 rounded text-white"
-  >
-    Run
-  </button>
+          <button
+            onClick={runCommands}
+            className="bg-blue-600 hover:bg-blue-700 px-6 py-2 rounded text-white"
+          >
+            Run
+          </button>
 
-  <button
-    onClick={clearCommands}
-    className="bg-red-600 hover:bg-red-700 px-6 py-2 rounded text-white"
-  >
-    Clear All
-  </button>
-</div>
-
+          <button
+            onClick={clearCommands}
+            className="bg-red-600 hover:bg-red-700 px-6 py-2 rounded text-white"
+          >
+            Clear All
+          </button>
+        </div>
 
         <FootPage />
 
-        {/* Show Quiz Modal */}
-      {showQuiz && quizData && (
-  <QuizModal
-    visible={showQuiz}
-    onClose={() => setShowQuiz(false)}
-    quizData={quizData}
-    onAnswerCorrect={handleQuizCorrect}
-  />
-)}
-
+        {/* Quiz Modal */}
+        {showQuiz && quizData && (
+          <QuizModal
+            visible={showQuiz}
+            onClose={() => setShowQuiz(false)}
+            quizData={quizData}
+            onAnswerCorrect={handleQuizCorrect}
+          />
+        )}
       </div>
     </DndProvider>
   );

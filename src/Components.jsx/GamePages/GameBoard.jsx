@@ -18,7 +18,7 @@ const GameBoard = ({ robotPosition, goalPosition }) => {
         
         {/* Main straight game board */}
         <div 
-          className="relative bg-gradient-to-br from-blue-900/40 to-slate-900/60 backdrop-blur-sm border-2 border-cyan-400 shadow-2xl"
+          className="relative bg-gradient-to-br from-blue-900 to-slate-900/60 backdrop-blur-sm border-2 border-cyan-400 shadow-2xl"
           style={{
             borderRadius: "24px",
             padding: "32px",
