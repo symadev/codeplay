@@ -1,58 +1,24 @@
 import React, { useEffect, useState } from "react";
 
-const QuizModal = ({ visible, onClose, quizData, onAnswerCorrect }) => {
+const QuizModal = ({ visible, onClose, quizData, onAnswerCorrect, onAnswerWrong }) => {
   const [selectedOption, setSelectedOption] = useState(null);
   const [feedback, setFeedback] = useState("");
 
-  // 🔊 Sound playing helper
   const playSound = (path) => {
     const audio = new Audio(path);
     audio.currentTime = 0;
     audio.play();
   };
 
-  // 🔊 Play sound when modal opens
   useEffect(() => {
     if (visible) {
       playSound("/public/audios/popup.mp3");
+      setSelectedOption(null);
+      setFeedback("");
     }
   }, [visible]);
 
-  // Reset selected option when quiz changes
-  useEffect(() => {
-    setSelectedOption(null);
-    setFeedback("");
-  }, [quizData]);
-
-  if (!visible || !quizData) {
-    return null;
-  }
-
-  if (!quizData.options || !Array.isArray(quizData.options)) {
-    return (
-      <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 backdrop-blur-sm">
-        <div className="relative bg-gradient-to-br from-red-900 via-red-800 to-red-900 rounded-2xl p-8 w-[90%] max-w-lg shadow-2xl border border-red-500/20">
-          <div className="absolute inset-0 bg-gradient-to-br from-red-400/10 via-transparent to-red-400/10 rounded-2xl pointer-events-none"></div>
-          <div className="relative z-10">
-            <h2 className="text-2xl font-bold mb-4 bg-gradient-to-r from-red-200 via-red-100 to-red-200 bg-clip-text text-transparent">
-              Error: Quiz options not found
-            </h2>
-            <p className="text-gray-200 mb-6">
-              Quiz data: {JSON.stringify(quizData)}
-            </p>
-            <div className="flex justify-end">
-              <button
-                onClick={onClose}
-                className="px-6 py-3 rounded-xl font-semibold transition-all duration-300 bg-gradient-to-r from-gray-600 to-gray-700 text-gray-200 hover:from-gray-700 hover:to-gray-800 hover:shadow-md transform hover:scale-[1.02] active:scale-[0.98]"
-              >
-                Close
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
+  if (!visible || !quizData) return null;
 
   const handleSubmit = () => {
     if (!selectedOption) {
@@ -61,129 +27,135 @@ const QuizModal = ({ visible, onClose, quizData, onAnswerCorrect }) => {
     }
 
     if (selectedOption === quizData.answer) {
-      setFeedback("Right Answer!!");
-      //  Success sound
-
+      setFeedback("🎉 Correct!");
+      
       setTimeout(() => {
+        onAnswerCorrect();  // tell parent it's correct
+        onClose();          // close modal
         setFeedback("");
-        onAnswerCorrect();
-        onClose();
       }, 1000);
     } else {
-      setFeedback("Wrong! Try Again");
-      playSound("/public/audios/error.mp3"); // ❌ Wrong answer sound
+      setFeedback("❌ Wrong! Try again");
+      playSound("/audios/error.mp3");
+      onAnswerWrong();      // tell parent it's wrong
     }
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 backdrop-blur-sm">
-      <div className="relative bg-gradient-to-br from-indigo-900 via-blue-800 to-purple-900 rounded-2xl p-8 w-[90%] max-w-lg shadow-2xl border border-blue-500/20 transform transition-all duration-300 hover:scale-[1.02]">
-        {/* Decorative gradient overlay */}
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-400/10 via-transparent to-purple-400/10 rounded-2xl pointer-events-none"></div>
+    <div className="fixed inset-0 bg-gradient-to-br from-slate-900/80 via-indigo-900/60 to-blue-900/80 backdrop-blur-sm flex justify-center items-center z-50">
+      <div className="bg-gradient-to-br from-slate-800 via-indigo-900 to-blue-900 text-white p-8 rounded-3xl w-full max-w-md border border-indigo-400/30 relative shadow-2xl shadow-indigo-500/20">
+        
+        {/* Close Button */}
+        <button
+          onClick={onClose}
+          className="absolute top-4 right-4 text-indigo-300 hover:text-white text-2xl transition-all duration-300 hover:rotate-90 hover:scale-110"
+        >
+          &times;
+        </button>
 
-        {/* Header */}
-        <div className="relative z-10">
-          <div className="flex items-center justify-between mb-6">
-            <div className="w-12 h-1 bg-gradient-to-r from-blue-400 to-purple-400 rounded-full"></div>
-            <div className="text-sm text-blue-300 font-medium bg-blue-800/50 px-3 py-1 rounded-full border border-blue-500/30">
-              Quiz Time
-            </div>
+        {/* Decorative Elements */}
+        <div className="absolute -top-2 -right-2 w-20 h-20 bg-gradient-to-br from-blue-400/20 to-indigo-600/20 rounded-full blur-xl"></div>
+        <div className="absolute -bottom-4 -left-4 w-16 h-16 bg-gradient-to-br from-indigo-400/20 to-blue-600/20 rounded-full blur-lg"></div>
+
+        {/* Quiz Icon and Title */}
+        <div className="text-center mb-8 relative z-10">
+          <div className="inline-block p-3 rounded-full bg-gradient-to-r from-blue-500 to-indigo-600 mb-4">
+            <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
           </div>
-          <h2 className="text-2xl font-bold mb-6 bg-gradient-to-r from-blue-200 via-blue-100 to-purple-200 bg-clip-text text-transparent leading-tight">
-            {quizData.question}
+          <h2 className="text-3xl font-extrabold bg-gradient-to-r from-blue-400 via-indigo-400 to-purple-400 bg-clip-text text-transparent">
+            Quiz Challenge
           </h2>
+          <p className="text-sm text-indigo-200 mt-2">
+            Test your knowledge
+          </p>
+        </div>
+
+        {/* Question */}
+        <div className="text-center mb-6 relative z-10">
+          <h3 className="text-xl font-bold text-white">{quizData.question}</h3>
         </div>
 
         {/* Options */}
         <div className="space-y-3 mb-6 relative z-10">
           {quizData.options.map((option, index) => (
-            <div
-              key={index}
-              className={`group relative flex items-center gap-4 p-4 rounded-xl border-2 transition-all duration-300 cursor-pointer ${
-                selectedOption === option
-                  ? "border-blue-400 bg-gradient-to-r from-blue-700/50 to-blue-600/50 shadow-lg shadow-blue-500/30"
-                  : "border-gray-500/30 bg-white/10 hover:border-blue-400/50 hover:bg-gradient-to-r hover:from-blue-700/30 hover:to-blue-600/30"
-              }`}
-              onClick={() => setSelectedOption(option)}
-            >
-              <div className="relative">
-                <input
-                  type="radio"
-                  id={`option-${index}`}
-                  name="quiz"
-                  value={option}
-                  checked={selectedOption === option}
-                  onChange={() => setSelectedOption(option)}
-                  className="sr-only"
-                />
-                <div
-                  className={`w-5 h-5 rounded-full border-2 transition-all duration-300 flex items-center justify-center ${
-                    selectedOption === option
-                      ? "border-blue-400 bg-gradient-to-r from-blue-400 to-blue-500"
-                      : "border-gray-400 bg-white/20 group-hover:border-blue-400"
-                  }`}
-                >
-                  {selectedOption === option && (
-                    <div className="w-2 h-2 bg-white rounded-full transform scale-100 transition-transform duration-200"></div>
-                  )}
-                </div>
-              </div>
+            <div key={index} className="relative">
+              <input
+                type="radio"
+                name="quizOption"
+                value={option}
+                id={`option-${index}`}
+                checked={selectedOption === option}
+                onChange={() => setSelectedOption(option)}
+                className="sr-only"
+              />
               <label
                 htmlFor={`option-${index}`}
-                className="cursor-pointer text-gray-100 font-medium flex-1 transition-colors group-hover:text-blue-200"
-              >
-                {option}
-              </label>
-              <div
-                className={`transition-all duration-300 ${
+                className={`block w-full px-4 py-3 rounded-xl border cursor-pointer transition-all duration-300 backdrop-blur-sm ${
                   selectedOption === option
-                    ? "opacity-100 translate-x-0"
-                    : "opacity-0 translate-x-2"
+                    ? "bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 border-indigo-400 text-white shadow-lg shadow-indigo-500/30"
+                    : "bg-slate-800/50 border-indigo-500/30 text-indigo-200 hover:border-indigo-400/50 hover:bg-slate-700/50"
                 }`}
               >
-                <div className="w-2 h-2 bg-gradient-to-r from-blue-400 to-purple-400 rounded-full"></div>
-              </div>
+                <div className="flex items-center">
+                  <div className={`w-5 h-5 rounded-full border-2 mr-3 flex items-center justify-center transition-all ${
+                    selectedOption === option
+                      ? "border-white bg-white"
+                      : "border-indigo-300 bg-transparent"
+                  }`}>
+                    {selectedOption === option && (
+                      <div className="w-3 h-3 rounded-full bg-gradient-to-r from-blue-600 to-purple-600"></div>
+                    )}
+                  </div>
+                  <span className="font-medium">{option}</span>
+                </div>
+              </label>
+              {/* Decorative gradient overlay */}
+              <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-blue-500/10 to-indigo-500/10 pointer-events-none"></div>
             </div>
           ))}
         </div>
 
         {/* Feedback */}
         {feedback && (
-          <div
-            className={`relative z-10 mb-6 p-4 rounded-xl border-l-4 ${
-              feedback.includes("Right")
-                ? "bg-gradient-to-r from-green-800/50 to-emerald-800/50 border-green-400 text-green-200"
-                : "bg-gradient-to-r from-red-800/50 to-rose-800/50 border-red-400 text-red-200"
-            }`}
-          >
-            <p className="font-semibold flex items-center gap-2">{feedback}</p>
+          <div className="text-center mb-6 relative z-10">
+            <p className={`font-semibold text-lg ${
+              feedback.includes("Correct") ? "text-green-400" : "text-red-400"
+            }`}>
+              {feedback}
+            </p>
           </div>
         )}
 
         {/* Buttons */}
-        <div className="flex justify-end gap-3 mt-8 relative z-10">
+        <div className="flex justify-end gap-3 relative z-10">
           <button
             onClick={onClose}
-            className="px-6 py-3 rounded-xl font-semibold transition-all duration-300 bg-gradient-to-r from-gray-600 to-gray-700 text-gray-200 hover:from-gray-700 hover:to-gray-800 hover:shadow-md transform hover:scale-[1.02] active:scale-[0.98]"
+            className="px-6 py-3 bg-slate-700/50 border border-indigo-500/30 rounded-xl text-indigo-200 hover:bg-slate-600/50 hover:border-indigo-400/50 transition-all duration-300 backdrop-blur-sm"
           >
-            Reject
+            Cancel
           </button>
           <button
             onClick={handleSubmit}
-            disabled={!selectedOption}
-            className={`px-6 py-3 rounded-xl font-semibold transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] ${
-              selectedOption
-                ? "bg-gradient-to-r from-blue-500 to-purple-600 text-white hover:from-blue-600 hover:to-purple-700 hover:shadow-lg shadow-blue-500/25"
-                : "bg-gray-600 text-gray-400 cursor-not-allowed"
+            className={`px-6 py-3 rounded-xl font-bold transition-all duration-300 ${
+              selectedOption 
+                ? "bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 text-white hover:from-blue-700 hover:via-indigo-700 hover:to-purple-700 transform hover:scale-105 shadow-lg shadow-indigo-500/30 hover:shadow-indigo-500/50" 
+                : "bg-gray-500/50 cursor-not-allowed text-gray-400 border border-gray-600/30"
             }`}
+            disabled={!selectedOption}
           >
-            Submit
+            <span className="flex items-center justify-center gap-2">
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+              </svg>
+              Submit
+            </span>
           </button>
         </div>
 
-        {/* Decorative elements */}
-        <div className="absolute -top-2 -right-2 w-24 h-24 bg-gradient-to-br from-blue-400/20 to-purple-400/20 rounded-full blur-xl pointer-events-none"></div>
-        <div className="absolute -bottom-2 -left-2 w-20 h-20 bg-gradient-to-br from-purple-400/20 to-blue-400/20 rounded-full blur-xl pointer-events-none"></div>
+        {/* Bottom decorative line */}
+        <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-indigo-400 to-transparent"></div>
       </div>
     </div>
   );

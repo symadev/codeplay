@@ -1,5 +1,6 @@
 // src/components/CommandPanel.jsx
 import React from "react";
+import logo  from "../../assets/images/robot_logo.png"
 import { useDrop } from "react-dnd";
 import CommandItem from "../GamePages/Commands/CommandItem";
 
@@ -32,7 +33,7 @@ const CommandPanel = ({ commands, setCommands }) => {
       {/* Header */}
       <div className="flex items-center gap-3 mb-6">
         <div className="w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center">
-          <span className="text-white font-bold text-sm">🤖</span>
+          <span className="text-white font-bold text-sm"><img src={logo } alt="" /></span>
         </div>
         <div>
           <h2 className="text-lg font-bold text-white">Command</h2>
@@ -48,7 +49,7 @@ const CommandPanel = ({ commands, setCommands }) => {
       <div className="bg-slate-700/50 rounded-xl p-4 mb-4">
         <div className="flex items-center gap-2 mb-3">
           <div className="w-6 h-6 bg-orange-500 rounded-full flex items-center justify-center">
-            <span className="text-white text-xs">🤖</span>
+            <span className="text-white text-xs"><img src={logo } alt="" /></span>
           </div>
           <span className="text-sm font-semibold text-white">Robot Command</span>
         </div>
@@ -125,16 +126,10 @@ const CommandPanel = ({ commands, setCommands }) => {
           <span className="text-sm text-slate-300">{commands.length}</span>
         </div>
         
-        <button className="bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-bold py-2 px-6 rounded-full transition-all duration-200 transform hover:scale-105 shadow-lg">
-          You Won!
-        </button>
+       
       </div>
 
-      {/* Bottom Navigation Dots */}
-      <div className="flex justify-center gap-2 mt-4">
-        <div className="w-2 h-2 bg-orange-500 rounded-full"></div>
-        <div className="w-2 h-2 bg-slate-600 rounded-full"></div>
-      </div>
+      
     </div>
   );
 };

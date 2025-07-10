@@ -1,4 +1,4 @@
-// src/GamePage.jsx
+// ✅ Fixed GamePage.jsx with proper state handling
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { useState } from "react";
@@ -8,33 +8,29 @@ import CommandPanel from "./CommandPanel";
 import FootPage from "./FootPage";
 import QuizModal from "./QuizModal";
 import UseAxiosPublic from "../../Provider/UseAxiosPublic";
+import WinModal from "../GamePages/WinModal";
 
 const GamePage = () => {
   const gridSize = 5;
   const [commands, setCommands] = useState([]);
-
-
   const [robotPosition, setRobotPosition] = useState({ x: 0, y: 0 });
-  const [goalPosition, setGoalPosition] = useState({ x: 4, y: 4 }); // initially fixed
-
+  const [goalPosition, setGoalPosition] = useState({ x: 4, y: 4 });
   const [showQuiz, setShowQuiz] = useState(false);
   const [quizData, setQuizData] = useState(null);
+  const [showWinModal, setShowWinModal] = useState(false);
+  const [wrongAttempts, setWrongAttempts] = useState(0);
 
   const axiosPublic = UseAxiosPublic();
 
-
-  // 🔊 Sound Play Function
   const playSound = (path) => {
     const audio = new Audio(path);
     audio.currentTime = 0;
     audio.play();
   };
 
-  // 📥 Load quiz before reaching goal
   const fetchQuiz = async () => {
     try {
       const res = await axiosPublic.get("/quiz");
-      console.log("Quiz received:", res.data);
       setQuizData(res.data);
       setShowQuiz(true);
     } catch (error) {
@@ -42,7 +38,6 @@ const GamePage = () => {
     }
   };
 
-  // ▶️ Run robot based on commands
   const runCommands = async () => {
     let pos = { ...robotPosition };
 
@@ -54,23 +49,28 @@ const GamePage = () => {
       else if (cmd === "right" && pos.x < 4) pos.x += 1;
       else if (cmd === "move Back" && pos.y > 0) pos.y -= 1;
 
-      // 🔊 Play move sound
-      playSound("/public/audios/move.mp3");
+      playSound("/audios/move.mp3");
 
-      // 🧠 Show quiz before goal
-      if (pos.x === goalPosition.x && pos.y === goalPosition.y - 1) {
+      const isNextToGoal =
+        (Math.abs(pos.x - goalPosition.x) === 1 && pos.y === goalPosition.y) ||
+        (Math.abs(pos.y - goalPosition.y) === 1 && pos.x === goalPosition.x);
+
+      if (isNextToGoal) {
+        setRobotPosition(pos);
+        await new Promise((res) => setTimeout(res, 400));
         await fetchQuiz();
-        break;
+        return;
       }
 
-      // Update robot position
       setRobotPosition({ ...pos });
+      await new Promise((res) => setTimeout(res, 400));
+    }
 
-      await new Promise((resolve) => setTimeout(resolve, 500));
+    if (pos.x === goalPosition.x && pos.y === goalPosition.y) {
+      setShowWinModal(true);
     }
   };
 
-  // 🔁 Reset all commands and robot
   const handleClearAll = () => {
     let newRobot = {
       x: Math.floor(Math.random() * gridSize),
@@ -82,7 +82,6 @@ const GamePage = () => {
       y: Math.floor(Math.random() * gridSize),
     };
 
-    // 🔁 Keep generating until they are not the same
     while (newRobot.x === newGoal.x && newRobot.y === newGoal.y) {
       newGoal = {
         x: Math.floor(Math.random() * gridSize),
@@ -94,14 +93,15 @@ const GamePage = () => {
     setGoalPosition(newGoal);
     setCommands([]);
     setShowQuiz(false);
-    playSound('/sounds/reset.mp3');
+    setShowWinModal(false);
+    playSound("/sounds/reset.mp3");
   };
 
-  // ✅ Answered quiz correctly
   const handleQuizCorrect = () => {
+    setWrongAttempts(0);
     setShowQuiz(false);
     setRobotPosition(goalPosition);
-    playSound("/public/audios/success.mp3");
+    setTimeout(() => setShowWinModal(true), 500);
   };
 
   return (
@@ -110,38 +110,54 @@ const GamePage = () => {
         <TopBar />
 
         <div className="flex flex-col md:flex-row justify-between gap-6">
-          <GameBoard
-            robotPosition={robotPosition}
-            goalPosition={goalPosition}
-          />
+          <GameBoard robotPosition={robotPosition} goalPosition={goalPosition} />
           <CommandPanel commands={commands} setCommands={setCommands} />
         </div>
 
-        <div className="flex justify-center gap-4">
-          <button
-            onClick={runCommands}
-            className="bg-blue-600 hover:bg-blue-700 px-6 py-2 rounded text-white"
-          >
-            Run
-          </button>
+        <div className="flex justify-center gap-6 mt-6">
+  {/* Run Button */}
+  <button
+    onClick={runCommands}
+    className="px-6 py-3 rounded-xl font-bold bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 text-white shadow-md hover:from-blue-700 hover:via-indigo-700 hover:to-purple-700 transition-all duration-300 transform hover:scale-105 shadow-indigo-500/30 hover:shadow-indigo-500/50"
+  >
+     Run 
+  </button>
 
-          <button
-            onClick={handleClearAll}
-            className="bg-red-600 hover:bg-red-700 px-6 py-2 rounded text-white"
-          >
-            Clear All
-          </button>
-        </div>
+  {/* Clear Button */}
+  <button
+    onClick={handleClearAll}
+    className="px-6 py-3 rounded-xl font-bold bg-gradient-to-r from-red-500 to-pink-600 text-white shadow-md hover:from-red-600 hover:to-pink-700 transition-all duration-300 transform hover:scale-105 shadow-pink-500/30 hover:shadow-pink-500/50"
+  >
+     Clear All
+  </button>
+</div>
+
 
         <FootPage />
 
-        {/* Quiz Modal */}
         {showQuiz && quizData && (
           <QuizModal
             visible={showQuiz}
             onClose={() => setShowQuiz(false)}
             quizData={quizData}
             onAnswerCorrect={handleQuizCorrect}
+            onAnswerWrong={() => {
+              setWrongAttempts((prev) => {
+                const newCount = prev + 1;
+                if (newCount >= 2) {
+                  handleClearAll();
+                  return 0;
+                }
+                return newCount;
+              });
+            }}
+          />
+        )}
+
+        {showWinModal && (
+          <WinModal
+            visible={showWinModal}
+            onClose={() => setShowWinModal(false)}
           />
         )}
       </div>

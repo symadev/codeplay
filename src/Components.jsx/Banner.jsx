@@ -73,7 +73,7 @@ const Banner = () => {
                                         <img
                                             src={ robot }
                                             alt="Robot Character"
-                                            className="relative z-10 w-36 h-36 object-contain animate-bounce drop-shadow-2xl"
+                                            className="relative z-10 w-36 h-36 object-contain  drop-shadow-2xl"
                                         />
 
                                         {/* Floating animation shadow */}

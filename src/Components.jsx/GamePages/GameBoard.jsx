@@ -1,7 +1,8 @@
 
 import robot from "../../assets/images/robot-main.png"
+import trophy from "../../assets/images/trophy.png"
 
- const GRID_SIZE = 5;
+const GRID_SIZE = 5;
 
 const GameBoard = ({ robotPosition, goalPosition }) => {
   const robotPos = robotPosition ?? { x: 0, y: 0 };
@@ -15,9 +16,9 @@ const GameBoard = ({ robotPosition, goalPosition }) => {
       <div className="relative">
         {/* Outer glow effect */}
         <div className="absolute inset-0 bg-cyan-300 opacity-20 blur-2xl transform scale-110"></div>
-        
+
         {/* Main straight game board */}
-        <div 
+        <div
           className="relative bg-gradient-to-br from-blue-900 to-slate-900 backdrop-blur-sm border-2 border-cyan-400 shadow-3xl"
           style={{
             borderRadius: "24px",
@@ -26,7 +27,7 @@ const GameBoard = ({ robotPosition, goalPosition }) => {
         >
           {/* Grid glow effect */}
           <div className="absolute inset-0 bg-cyan-400/10 blur-sm rounded-3xl"></div>
-          
+
           {/* Grid container */}
           <div className="relative grid grid-cols-5 gap-3 p-6">
             {rows.map((_, rowIdx) =>
@@ -39,8 +40,8 @@ const GameBoard = ({ robotPosition, goalPosition }) => {
                     key={`${rowIdx}-${colIdx}`}
                     className={`
                       relative w-20 h-20 border-2 transition-all duration-300
-                      ${ isGoal
-                        ? "bg-amber-600 border-amber-400 shadow-lg"
+                      ${isGoal
+                        ? "bg-amber-600 shadow-lg"
                         : "bg-blue-800/30 border-cyan-400/60 hover:border-cyan-300"
                       }
                     `}
@@ -54,19 +55,24 @@ const GameBoard = ({ robotPosition, goalPosition }) => {
                     {/* Cell content */}
                     <div className="absolute inset-0 flex items-center justify-center">
                       {isRobot ? (
-                        <div className="relative w-16 h-16 flex items-center justify-center">
-                          <img 
-                            src={ robot }
-                            alt="Robot" 
-                            className="w-full h-full object-contain"
+                        <div className="relative w-16 h-16 flex items-center justify-center ">
+                          <img
+                            src={robot}
+                            alt="Robot"
+                            className="w-full h-full object-contain drop-shadow-md"
                           />
                         </div>
                       ) : isGoal ? (
-                        <div className="w-12 h-8 bg-amber-600 rounded border-2 border-amber-400 flex items-center justify-center">
-                          <div className="w-8 h-5 bg-amber-500 rounded-sm"></div>
+                        <div className="relative w-12 h-12 flex items-center justify-center animate-pulse">
+                          <img
+                            src={trophy}
+                            alt="Goal"
+                            className="w-full h-full object-contain drop-shadow-lg"
+                          />
                         </div>
                       ) : null}
                     </div>
+
                   </div>
                 );
               })
