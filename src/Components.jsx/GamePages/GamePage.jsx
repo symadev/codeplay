@@ -6,17 +6,22 @@ import TopBar from "./TopBar";
 import GameBoard from "./GameBoard";
 import CommandPanel from "./CommandPanel";
 import FootPage from "./FootPage";
-import QuizModal from "./QuizModal"; 
+import QuizModal from "./QuizModal";
 import UseAxiosPublic from "../../Provider/UseAxiosPublic";
 
 const GamePage = () => {
+  const gridSize = 5;
   const [commands, setCommands] = useState([]);
+
+
   const [robotPosition, setRobotPosition] = useState({ x: 0, y: 0 });
+  const [goalPosition, setGoalPosition] = useState({ x: 4, y: 4 }); // initially fixed
+
   const [showQuiz, setShowQuiz] = useState(false);
   const [quizData, setQuizData] = useState(null);
 
   const axiosPublic = UseAxiosPublic();
-  const goalPosition = { x: 4, y: 4 };
+
 
   // 🔊 Sound Play Function
   const playSound = (path) => {
@@ -66,11 +71,30 @@ const GamePage = () => {
   };
 
   // 🔁 Reset all commands and robot
-  const clearCommands = () => {
+  const handleClearAll = () => {
+    let newRobot = {
+      x: Math.floor(Math.random() * gridSize),
+      y: Math.floor(Math.random() * gridSize),
+    };
+
+    let newGoal = {
+      x: Math.floor(Math.random() * gridSize),
+      y: Math.floor(Math.random() * gridSize),
+    };
+
+    // 🔁 Keep generating until they are not the same
+    while (newRobot.x === newGoal.x && newRobot.y === newGoal.y) {
+      newGoal = {
+        x: Math.floor(Math.random() * gridSize),
+        y: Math.floor(Math.random() * gridSize),
+      };
+    }
+
+    setRobotPosition(newRobot);
+    setGoalPosition(newGoal);
     setCommands([]);
-    setRobotPosition({ x: 0, y: 0 });
     setShowQuiz(false);
-    playSound("/public/audios/clear all.mp3");
+    playSound('/sounds/reset.mp3');
   };
 
   // ✅ Answered quiz correctly
@@ -102,7 +126,7 @@ const GamePage = () => {
           </button>
 
           <button
-            onClick={clearCommands}
+            onClick={handleClearAll}
             className="bg-red-600 hover:bg-red-700 px-6 py-2 rounded text-white"
           >
             Clear All

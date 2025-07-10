@@ -14,11 +14,11 @@ const GameBoard = ({ robotPosition, goalPosition }) => {
     <div className="flex-1 flex items-center justify-center">
       <div className="relative">
         {/* Outer glow effect */}
-        <div className="absolute inset-0 bg-cyan-400 opacity-20 blur-2xl transform scale-110"></div>
+        <div className="absolute inset-0 bg-cyan-300 opacity-20 blur-2xl transform scale-110"></div>
         
         {/* Main straight game board */}
         <div 
-          className="relative bg-gradient-to-br from-blue-900 to-slate-900/60 backdrop-blur-sm border-2 border-cyan-400 shadow-2xl"
+          className="relative bg-gradient-to-br from-blue-900 to-slate-900 backdrop-blur-sm border-2 border-cyan-400 shadow-3xl"
           style={{
             borderRadius: "24px",
             padding: "32px",
