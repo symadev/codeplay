@@ -1,49 +1,79 @@
-import React from "react";
 
-const GRID_SIZE = 5;
+import robot from "../../assets/images/robot-main.png"
+
+ const GRID_SIZE = 5;
 
 const GameBoard = ({ robotPosition, goalPosition }) => {
-  // ডিফল্ট ভ্যালু দিয়ে props নিরাপদ করা
-  const robotPos = robotPosition ?? { x: -1, y: -1 };
-  const goalPos = goalPosition ?? { x: -1, y: -1 };
+  const robotPos = robotPosition ?? { x: 0, y: 0 };
+  const goalPos = goalPosition ?? { x: 4, y: 4 };
 
   const rows = Array.from({ length: GRID_SIZE });
   const cols = Array.from({ length: GRID_SIZE });
-  // এটা দুইটা অ্যারে তৈরি করে, প্রতিটি ৫টা আইটেম নিয়ে, যাতে আমরা map() ব্যবহার করে বোর্ডের প্রতিটি ঘর তৈরি করতে পারি।
 
   return (
-    <div className="bg-blue-900 rounded-2xl p-4 shadow-xl w-[300px] h-[300px] grid grid-cols-5 grid-rows-5 gap-1">
+    <div className="flex-1 flex items-center justify-center">
+      <div className="relative">
+        {/* Outer glow effect */}
+        <div className="absolute inset-0 bg-cyan-400 opacity-20 blur-2xl transform scale-110"></div>
+        
+        {/* Main straight game board */}
+        <div 
+          className="relative bg-gradient-to-br from-blue-900/40 to-slate-900/60 backdrop-blur-sm border-2 border-cyan-400 shadow-2xl"
+          style={{
+            borderRadius: "24px",
+            padding: "32px",
+          }}
+        >
+          {/* Grid glow effect */}
+          <div className="absolute inset-0 bg-cyan-400/10 blur-sm rounded-3xl"></div>
+          
+          {/* Grid container */}
+          <div className="relative grid grid-cols-5 gap-3 p-6">
+            {rows.map((_, rowIdx) =>
+              cols.map((_, colIdx) => {
+                const isRobot = robotPos.x === colIdx && robotPos.y === rowIdx;
+                const isGoal = goalPos.x === colIdx && goalPos.y === rowIdx;
 
-      {/* এখানে rows এবং cols এর মধ্যে map() করে ৫x৫ গ্রিড তৈরি করা হচ্ছে। প্রতিটি ঘরের জন্য:
-
-rowIdx = কোন সারি (row) তে আছি
-
-colIdx = কোন কলামে আছি */}
-
-
-
-      {rows.map((_, rowIdx) =>
-        cols.map((_, colIdx) => {
-          const isRobot = robotPos.x === colIdx && robotPos.y === rowIdx;
-          const isGoal = goalPos.x === colIdx && goalPos.y === rowIdx;
-          // চেক করছে এই ঘরটি কি রোবটের জন্য? নাকি লক্ষ্যস্থলের জন্য?
-
-          return (
-            <div
-              key={`${rowIdx}-${colIdx}`}
-              className={`robot-cell rounded-md flex justify-center items-center text-2xl select-none ${isRobot
-                  ? "bg-yellow-400 text-black font-bold scale-110"
-                  : isGoal
-                    ? "bg-green-400 text-black font-bold"
-                    : "bg-blue-700"
-                }`}
-            >
-              {isRobot ? "🤖" : isGoal ? "🎯" : ""}
-            </div>
-
-          );
-        })
-      )}
+                return (
+                  <div
+                    key={`${rowIdx}-${colIdx}`}
+                    className={`
+                      relative w-20 h-20 border-2 transition-all duration-300
+                      ${ isGoal
+                        ? "bg-amber-600 border-amber-400 shadow-lg"
+                        : "bg-blue-800/30 border-cyan-400/60 hover:border-cyan-300"
+                      }
+                    `}
+                    style={{
+                      boxShadow: isGoal
+                        ? "0 0 25px rgba(217, 119, 6, 0.6), 0 6px 12px rgba(0,0,0,0.3)"
+                        : "0 0 15px rgba(6, 182, 212, 0.3), 0 4px 8px rgba(0,0,0,0.2)",
+                      borderRadius: "8px",
+                    }}
+                  >
+                    {/* Cell content */}
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      {isRobot ? (
+                        <div className="relative w-16 h-16 flex items-center justify-center">
+                          <img 
+                            src={ robot }
+                            alt="Robot" 
+                            className="w-full h-full object-contain"
+                          />
+                        </div>
+                      ) : isGoal ? (
+                        <div className="w-12 h-8 bg-amber-600 rounded border-2 border-amber-400 flex items-center justify-center">
+                          <div className="w-8 h-5 bg-amber-500 rounded-sm"></div>
+                        </div>
+                      ) : null}
+                    </div>
+                  </div>
+                );
+              })
+            )}
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
