@@ -5,6 +5,7 @@ import {
 import MainLayout from "./Components.jsx/MainLayout";
 import Home from "./Components.jsx/Home";
 import GamePage from "./Components.jsx/GamePages/GamePage";
+import PrivateRoute from "./Components.jsx/PrivateRoute";
 
 
 
@@ -25,7 +26,7 @@ const router = createBrowserRouter([
 
    {
     path: "game",
-    element:<GamePage></GamePage> ,
+    element:<PrivateRoute><GamePage></GamePage></PrivateRoute> ,
   }
 ]);
 

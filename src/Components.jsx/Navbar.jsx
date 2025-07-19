@@ -1,10 +1,14 @@
 import { useState } from 'react';
 import Login from './Login';     // Adjust path if needed
 import SignUp from './SignUp';   // Import SignUp component (adjust path)
+import { Link } from 'react-router-dom';
+import { AuthContext } from '../Provider/AuthContext';
+import UseAuth from '../Provider/UseAuth';
 
 const Navbar = () => {
   // Hover states for buttons
   const [isHovered, setIsHovered] = useState({ login: false, start: false });
+  const {user, logOut} = UseAuth()
 
   // Modal visibility states
   const [showLoginModal, setShowLoginModal] = useState(false);
@@ -24,9 +28,7 @@ const Navbar = () => {
   const closeLogin = () => setShowLoginModal(false);
   const closeRegister = () => setShowRegisterModal(false);
 
-  const handleStartPlaying = () => {
-    console.log('Start Playing clicked');
-  };
+ 
 
   return (
     <nav className="relative bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-700 overflow-hidden">
@@ -45,30 +47,57 @@ const Navbar = () => {
         {/* Navigation Buttons */}
         <div className="flex items-center space-x-3 md:space-x-4">
           {/* Login Button */}
-          <button
-            onClick={openLogin}
-            onMouseEnter={() => setIsHovered({ ...isHovered, login: true })}
-            onMouseLeave={() => setIsHovered({ ...isHovered, login: false })}
-            className={`
-              relative px-4 md:px-6 py-2 md:py-3 
-              text-white font-semibold rounded-full
-              border-2 border-white/30 backdrop-blur-sm
-              transition-all duration-300 ease-in-out
-              hover:border-white/50 hover:bg-white/10
-              hover:-translate-y-1 hover:shadow-lg
-              active:translate-y-0
-              ${isHovered.login ? 'shadow-xl' : ''}
-            `}
-          >
-            <span className="relative z-10">Login</span>
-            {isHovered.login && (
-              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-pulse rounded-full"></div>
-            )}
-          </button>
+        {/* Login Button (Shown when user is not logged in) */}
+      {!user && (
+        <button
+          onClick={openLogin}
+          onMouseEnter={() => setIsHovered({ ...isHovered, login: true })}
+          onMouseLeave={() => setIsHovered({ ...isHovered, login: false })}
+          className={`
+            relative px-4 md:px-6 py-2 md:py-3 
+            text-white font-semibold rounded-full
+            border-2 border-white/30 backdrop-blur-sm
+            transition-all duration-300 ease-in-out
+            hover:border-white/50 hover:bg-white/10
+            hover:-translate-y-1 hover:shadow-lg
+            active:translate-y-0
+            ${isHovered.login ? 'shadow-xl' : ''}
+          `}
+        >
+          <span className="relative z-10">Login</span>
+          {isHovered.login && (
+            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-pulse rounded-full"></div>
+          )}
+        </button>
+      )}
+
+      {/* Logout Button (Shown when user is logged in) */}
+      {user && (
+        <button
+          onClick={logOut}
+          onMouseEnter={() => setIsHovered({ ...isHovered, logout: true })}
+          onMouseLeave={() => setIsHovered({ ...isHovered, logout: false })}
+          className={`
+            relative px-4 md:px-6 py-2 md:py-3 
+            text-white font-semibold rounded-full
+            border-2 border-red-300/30 backdrop-blur-sm
+            transition-all duration-300 ease-in-out
+            hover:border-red-500 hover:bg-red-600/20
+            hover:-translate-y-1 hover:shadow-lg
+            active:translate-y-0
+            ${isHovered.logout ? 'shadow-xl' : ''}
+          `}
+        >
+          <span className="relative z-10">Logout</span>
+          {isHovered.logout && (
+            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-red-400/30 to-transparent animate-pulse rounded-full"></div>
+          )}
+        </button>
+      )}
 
           {/* Start Playing Button */}
-          <button
-            onClick={handleStartPlaying}
+          <Link to='/game'
+           
             onMouseEnter={() => setIsHovered({ ...isHovered, start: true })}
             onMouseLeave={() => setIsHovered({ ...isHovered, start: false })}
             className={`
@@ -88,7 +117,7 @@ const Navbar = () => {
             {isHovered.start && (
               <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent animate-pulse rounded-full"></div>
             )}
-          </button>
+          </Link>
         </div>
       </div>
 
