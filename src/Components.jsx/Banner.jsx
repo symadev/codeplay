@@ -1,8 +1,31 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import robot from "../assets/images/robot.png"
 import board from "../assets/images/board-2.png"
+import { useUI } from "../Provider/UIContext";
+import UseAuth from "../Provider/UseAuth";
 
 const Banner = () => {
+
+
+    const { setShowLoginModal } = useUI();
+    const navigate = useNavigate();
+    const { user } = UseAuth();
+
+
+
+
+
+
+    const handleStartPlaying = () => {
+        if (user) {
+            navigate('/game'); //  go to game if logged in
+        } else {
+            setShowLoginModal(true); // open login modal if not logged in
+        }
+    };
+
+
+
     return (
         <div className="relative min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900 overflow-hidden">
             {/* Animated Background Elements */}
@@ -38,10 +61,13 @@ const Banner = () => {
                         </div>
 
                         <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-                            <Link to='/game' className="bg-gradient-to-r from-cyan-400 to-blue-500 hover:from-cyan-500 hover:to-blue-600 text-white px-8 py-4 rounded-full font-bold text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300">
+                            <button
+                                onClick={handleStartPlaying}
+                                className="bg-gradient-to-r from-cyan-400 to-blue-500 hover:from-cyan-500 hover:to-blue-600 text-white px-8 py-4 rounded-full font-bold text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300"
+                            >
                                 🚀 Start Playing
-                            </Link>
-                            
+                            </button>
+
                         </div>
                     </div>
 
@@ -69,7 +95,7 @@ const Banner = () => {
 
                                         {/* Robot image */}
                                         <img
-                                            src={ robot }
+                                            src={robot}
                                             alt="Robot Character"
                                             className="relative z-10 w-36 h-36 object-contain  drop-shadow-2xl"
                                         />
@@ -111,28 +137,28 @@ const Banner = () => {
                             Move Backward
                         </div>
 
-                      {/* Chat bubble */}
-<div className="absolute top-16 right-4 animate-bounce">
-    <div className="relative bg-white rounded-xl p-3 shadow-lg max-w-[240px] border border-gray-100 transform hover:scale-105 transition-transform duration-200">
-        {/* Bubble tail */}
-        <div className="absolute bottom-[-6px] right-10 w-0 h-0 border-l-[8px] border-r-[8px] border-t-[8px] border-l-transparent border-r-transparent border-t-white"></div>
-        
-        {/* Content */}
-        <div className="text-xs text-gray-700 mb-2 leading-relaxed">
-            The robot wants to jump 5 times to reach the goal. Which loop should it use?
-        </div>
-        
-        {/* AI Helper Info */}
-        <div className="flex items-center gap-2 text-xs text-gray-500">
-            <div className="w-4 h-4 bg-gradient-to-r from-blue-400 to-purple-500 rounded-full flex items-center justify-center">
-                <svg className="w-2 h-2 text-white" fill="currentColor" viewBox="0 0 20 20">
-                    <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                </svg>
-            </div>
-            <span className="font-medium">AI Helper</span>
-        </div>
-    </div>
-</div>
+                        {/* Chat bubble */}
+                        <div className="absolute top-16 right-4 animate-bounce">
+                            <div className="relative bg-white rounded-xl p-3 shadow-lg max-w-[240px] border border-gray-100 transform hover:scale-105 transition-transform duration-200">
+                                {/* Bubble tail */}
+                                <div className="absolute bottom-[-6px] right-10 w-0 h-0 border-l-[8px] border-r-[8px] border-t-[8px] border-l-transparent border-r-transparent border-t-white"></div>
+
+                                {/* Content */}
+                                <div className="text-xs text-gray-700 mb-2 leading-relaxed">
+                                    The robot wants to jump 5 times to reach the goal. Which loop should it use?
+                                </div>
+
+                                {/* AI Helper Info */}
+                                <div className="flex items-center gap-2 text-xs text-gray-500">
+                                    <div className="w-4 h-4 bg-gradient-to-r from-blue-400 to-purple-500 rounded-full flex items-center justify-center">
+                                        <svg className="w-2 h-2 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                            <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                        </svg>
+                                    </div>
+                                    <span className="font-medium">AI Helper</span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

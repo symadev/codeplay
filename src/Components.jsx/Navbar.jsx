@@ -2,31 +2,49 @@ import { useState } from 'react';
 import Login from './Login';     // Adjust path if needed
 import SignUp from './SignUp';   // Import SignUp component (adjust path)
 import { Link } from 'react-router-dom';
-import { AuthContext } from '../Provider/AuthContext';
+
 import UseAuth from '../Provider/UseAuth';
+import { useUI } from '../Provider/UIContext';
 
 const Navbar = () => {
   // Hover states for buttons
   const [isHovered, setIsHovered] = useState({ login: false, start: false });
   const {user, logOut} = UseAuth()
+  
 
   // Modal visibility states
-  const [showLoginModal, setShowLoginModal] = useState(false);
-  const [showRegisterModal, setShowRegisterModal] = useState(false);
+ 
+
+const { 
+  showLoginModal, setShowLoginModal, 
+  showRegisterModal, setShowRegisterModal 
+} = useUI();
+
 
   // Functions to open/close modals
-  const openLogin = () => {
-    setShowRegisterModal(false);
-    setShowLoginModal(true);
-  };
+const openLogin = () => {
+  setShowRegisterModal(false);
+  setShowLoginModal(true);
+};
+const closeLogin = () => setShowLoginModal(false);
 
-  const openRegister = () => {
-    setShowLoginModal(false);
-    setShowRegisterModal(true);
-  };
+const openRegister = () => {
+  setShowLoginModal(false);
+  setShowRegisterModal(true);
+};
+const closeRegister = () => setShowRegisterModal(false);
 
-  const closeLogin = () => setShowLoginModal(false);
-  const closeRegister = () => setShowRegisterModal(false);
+
+   const handleStartPlaying = () => {
+        if (user) {
+            navigate('/game'); //  go to game if logged in
+        } else {
+            setShowLoginModal(true); // open login modal if not logged in
+        }
+    };
+
+
+ 
 
  
 
@@ -96,7 +114,8 @@ const Navbar = () => {
       )}
 
           {/* Start Playing Button */}
-          <Link to='/game'
+          <button 
+           onClick={handleStartPlaying}
            
             onMouseEnter={() => setIsHovered({ ...isHovered, start: true })}
             onMouseLeave={() => setIsHovered({ ...isHovered, start: false })}
@@ -117,7 +136,7 @@ const Navbar = () => {
             {isHovered.start && (
               <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent animate-pulse rounded-full"></div>
             )}
-          </Link>
+          </button>
         </div>
       </div>
 
