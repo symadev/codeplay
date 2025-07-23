@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import Login from './Login';     // Adjust path if needed
-import SignUp from './SignUp';   // Import SignUp component (adjust path)
-import { Link } from 'react-router-dom';
+import Login from './Login';    
+import SignUp from './SignUp';  
+import { Link, useNavigate } from 'react-router-dom';
 
 import UseAuth from '../Provider/UseAuth';
 import { useUI } from '../Provider/UIContext';
@@ -10,6 +10,8 @@ const Navbar = () => {
   // Hover states for buttons
   const [isHovered, setIsHovered] = useState({ login: false, start: false });
   const {user, logOut} = UseAuth()
+  const navigate = useNavigate();
+
   
 
   // Modal visibility states
