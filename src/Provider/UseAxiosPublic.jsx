@@ -3,7 +3,7 @@ import axios from "axios";
 
 const UseAxiosPublic = () => {
      const axiosSecure = axios.create({
-        baseURL:'http://localhost:5000'
+        baseURL:'https://game-server-blue.vercel.app'
     })
     return axiosSecure;
 };

@@ -5,7 +5,7 @@ const WinModal = ({ visible, onClose }) => {
   // Optional win sound
   useEffect(() => {
     if (visible) {
-      const audio = new Audio("/public/audios/success.mp3");
+      const audio = new Audio("/audios/success.mp3");
       audio.play();
     }
   }, [visible]);

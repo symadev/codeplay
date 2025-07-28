@@ -29,8 +29,8 @@ const SignUp = ({ isOpen, onRequestClose, openLogin }) => {
             if (res.data.insertedId) {
               toast.success("SignUp Done!");
               reset();
-              onRequestClose();      // ✅ close modal
-              navigate('/');         // ✅ redirect to homepage
+              onRequestClose();      //  close modal
+              navigate('/');         //  redirect to homepage
             }
           })
           .catch(() => {

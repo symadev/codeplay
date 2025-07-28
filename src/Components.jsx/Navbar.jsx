@@ -14,7 +14,7 @@ const Navbar = () => {
 
   
 
-  // Modal visibility states
+  // here attached the  modal visibility states
  
 
 const { 
@@ -39,7 +39,7 @@ const closeRegister = () => setShowRegisterModal(false);
 
    const handleStartPlaying = () => {
         if (user) {
-            navigate('/game'); //  go to game if logged in
+            navigate('/game'); //  go to  the game if logged in
         } else {
             setShowLoginModal(true); // open login modal if not logged in
         }
@@ -66,7 +66,7 @@ const closeRegister = () => setShowRegisterModal(false);
 
         {/* Navigation Buttons */}
         <div className="flex items-center space-x-3 md:space-x-4">
-          {/* Login Button */}
+        
         {/* Login Button (Shown when user is not logged in) */}
       {!user && (
         <button
@@ -91,7 +91,7 @@ const closeRegister = () => setShowRegisterModal(false);
         </button>
       )}
 
-      {/* Logout Button (Shown when user is logged in) */}
+      {/* logout button (Shown when user is logged in) */}
       {user && (
         <button
           onClick={logOut}
@@ -115,7 +115,7 @@ const closeRegister = () => setShowRegisterModal(false);
         </button>
       )}
 
-          {/* Start Playing Button */}
+          {/*start playing  */}
           <button 
            onClick={handleStartPlaying}
            
@@ -142,14 +142,14 @@ const closeRegister = () => setShowRegisterModal(false);
         </div>
       </div>
 
-      {/* Login Modal */}
+      {/*login modal */}
       <Login
         isOpen={showLoginModal}
         onRequestClose={closeLogin}
         openRegister={openRegister} // So Login modal can open Register modal
       />
 
-      {/* Register Modal */}
+      {/* register modal here */}
       <SignUp
         isOpen={showRegisterModal}
         onRequestClose={closeRegister}

@@ -18,9 +18,9 @@ const Banner = () => {
 
     const handleStartPlaying = () => {
         if (user) {
-            navigate('/game'); //  go to game if logged in
+            navigate('/game'); 
         } else {
-            setShowLoginModal(true); // open login modal if not logged in
+            setShowLoginModal(true); 
         }
     };
 
@@ -65,13 +65,13 @@ const Banner = () => {
                                 onClick={handleStartPlaying}
                                 className="bg-gradient-to-r from-cyan-400 to-blue-500 hover:from-cyan-500 hover:to-blue-600 text-white px-8 py-4 rounded-full font-bold text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300"
                             >
-                                🚀 Start Playing
+                                🎮 Start Playing
                             </button>
 
                         </div>
                     </div>
 
-                    {/* Right content with floating command blocks */}
+                    {/* Right content with floating command blocks here  */}
                     <div className="lg:w-1/2 relative">
                         {/* Main character area */}
                         <div className="relative flex justify-center items-center">

@@ -5,7 +5,7 @@ import UseAuth from "./UseAuth";
 
 
 const axiosSecure = axios.create({
-  baseURL: 'http://localhost:5000'
+  baseURL: 'https://game-server-blue.vercel.app'
 });
 
 const UseAxiosSecure = () => {
@@ -16,14 +16,16 @@ const UseAxiosSecure = () => {
 
 
   // এখানে axiosSecure-এর ইন্টারসেপ্টর ব্যবহার করা হচ্ছে
+
+  //here  i use the  axiosSecure interceptor
   axiosSecure.interceptors.request.use(function (config) {
    const token =   localStorage.getItem('access-token')
     // console.log('request stopped by interceptors',token);
     config.headers.authorization = `Bearer ${token}`;
-    // রিকোয়েস্ট পাঠানোর আগে কিছু কাজ করতে পারেন, যেমন টোকেন যোগ করা
+   
     return config;
   }, function (error) {
-    // রিকোয়েস্টের ত্রুটি হ্যান্ডলিং
+    //the error handeling of the request 
     return Promise.reject(error);
   });
 

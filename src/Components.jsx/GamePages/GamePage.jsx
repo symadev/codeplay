@@ -1,4 +1,4 @@
-// ✅ Fixed GamePage.jsx with proper state handling
+
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { useState } from "react";
@@ -94,7 +94,7 @@ const GamePage = () => {
     setCommands([]);
     setShowQuiz(false);
     setShowWinModal(false);
-    playSound("/sounds/reset.mp3");
+    playSound("/audios/reset.mp3");
   };
 
   const handleQuizCorrect = () => {

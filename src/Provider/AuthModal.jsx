@@ -22,14 +22,14 @@ const AuthModal = () => {
 
     return (
         <>
-            {/* Buttons to open modals (optional, or call these from Navbar) */}
+            {/* Buttons to open modals */}
             <button onClick={openLogin}>Open Login</button>
             <button onClick={openRegister}>Open Register</button>
 
             <Login
                 isOpen={showLogin}
                 onRequestClose={() => setShowLogin(false)}
-               openRegister={openRegister}  // This passes the openRegister function correctly
+               openRegister={openRegister}  // This passes the open register function correctly
             />
 
 
@@ -49,22 +49,15 @@ export default AuthModal;
 
 
 
-// AuthModal কম্পোনেন্টটি হলো একটি parent/controller কম্পোনেন্ট, যেটি নিচের কাজগুলো করে:
 
-// State Manage করে:
+/* 
 
-// showLogin: Login modal খোলা আছে কিনা তা ঠিক করে।
+AuthModal is a component which is do the work like :
+manage the state , showlogin:check that if the login modal is open , showregisrer:check that  if the register modal is open , 
+give  the control functions, open login :it opens the login modal and shut the registar modal,
+open register :it opens the register modal and shut the login modal,
 
-// showRegister: Register modal খোলা আছে কিনা তা ঠিক করে।
+send the props as a child element to the other component
 
-// Control Functions দেয়:
 
-// openLogin(): Login modal খুলে এবং Register modal বন্ধ করে।
-
-// openRegister(): Register modal খুলে এবং Login modal বন্ধ করে।
-
-// Props পাঠায় Child Modal-এ:
-
-// Login কম্পোনেন্টে openRegister পাঠানো হয়, যাতে user চাইলে "Sign up" বাটনে ক্লিক করে Register modal খুলতে পারে।
-
-// SignUp কম্পোনেন্টে openLogin পাঠানো হয়, যাতে "Already have account?" ক্লিক করলে Login modal-এ ফিরে যাওয়া যায়।
+*/

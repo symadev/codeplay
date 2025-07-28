@@ -12,7 +12,7 @@ const QuizModal = ({ visible, onClose, quizData, onAnswerCorrect, onAnswerWrong 
 
   useEffect(() => {
     if (visible) {
-      playSound("/public/audios/popup.mp3");
+      playSound("/audios/popup.mp3");
       setSelectedOption(null);
       setFeedback("");
     }
