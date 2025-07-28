@@ -3,7 +3,7 @@
 
 
 <p align="center">
-  <img src="Screenshots/banner-1.png" alt="Codeplay Banner" width="100%" />
+  <img src="Screenshorts/banner-1.png" alt="Codeplay Banner" width="100%" />
 </p>
 
 ---
@@ -71,7 +71,7 @@ npm run dev
 
 
 <p align="center">
-  <img src="Screenshots/banner-2.png" alt="Codeplay Banner" width="100%" />
+  <img src="Screenshorts/banner-2.png" alt="Codeplay Banner" width="100%" />
 </p>
 
 
